@@ -1,66 +1,35 @@
 import React, { useState } from "react";
 import "./index.css";
+import sampleImage from "./assets/sampleimage.jpg";
 
-export default function App() {
-  const [tasks, set] = useState([]);
-  const [filter, setF] = useState("all");
-  const [f, setForm] = useState({ name: "", date: "", desc: "" });
-
-  const add = (e) => {
-    e.preventDefault();
-
-    if (f.name && f.date) {
-      set([...tasks, { ...f, done: false }]);
-      setForm({ name: "", date: "", desc: "" });
-    }
-  };
-
-  const toggle = (i) =>
-    set(tasks.map((t, j) => (j === i ? { ...t, done: !t.done } : t)));
+const ProfileCard = ({ name, bio, initialBg }) => {
+  const [bg, setBg] = useState(initialBg);
 
   return (
-    <div className="app">
-      <h1>Reminder App</h1>
+    <div
+      className="card"
+      style={{ background: bg }}
+      onMouseEnter={() =>
+        setBg("linear-gradient(135deg, #FFD700, #FFA07A)")
+      }
+      onMouseLeave={() => setBg(initialBg)}
+    >
+      <img src={sampleImage} alt={name} className="pic" />
+      <h2>{name}</h2>
+      <p>{bio}</p>
+    </div>
+  );
+};
 
-      <form onSubmit={add}>
-        {["name", "date", "desc"].map((k) => (
-          <input
-            key={k}
-            type={k === "date" ? "date" : "text"}
-            placeholder={k}
-            value={f[k]}
-            onChange={(e) => setForm({ ...f, [k]: e.target.value })}
-          />
-        ))}
-        <button type="submit">Add</button>
-      </form>
-
-      <div className="filters">
-        {["all", "done", "notdone"].map((v) => (
-          <button key={v} onClick={() => setF(v)}>
-            {v}
-          </button>
-        ))}
-      </div>
-
-      <ul>
-        {tasks
-          .filter((t) => {
-            if (filter === "all") return true;
-            if (filter === "done") return t.done;
-            if (filter === "notdone") return !t.done;
-          })
-          .map((t, i) => (
-            <li
-              key={i}
-              onClick={() => toggle(i)}
-              className={t.done ? "done" : ""}
-            >
-              <b>{t.name}</b> - {t.date}
-              {t.desc && ` (${t.desc})`}
-            </li>
-          ))}
-      </ul>
+export default function App() {
+  return (
+    <div className="container">
+      <ProfileCard
+        name="Steve Jobs"
+        bio="Co-founder of Apple Inc."
+        initialBg="linear-gradient(135deg, #ADD8E6, #E6E6FA)"
+      />
     </div>
   );
 }
+
